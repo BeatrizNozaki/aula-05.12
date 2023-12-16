@@ -6,10 +6,17 @@
 
     //Metodos Publicos  
 
-    Usuario.prototype.create = function() {}
+    Usuario.prototype.create = async function(name, email) {
+        var body = {
+            "name": name,
+            "email": email
+        };
+        var data = await post("create", body);
+        console.log(data);
+    }
 
-    Usuario.prototype.buscarTodos = async function() {
-        var data = await get("busca/todos", null);
+    Usuario.prototype.buscaTodos = async function() {
+        var data = await get("busca", "todos");
         console.log(data);
     }
 
@@ -18,23 +25,29 @@
         console.log(data);
     }
 
-    Usuario.prototype.update = function(id, name, email) {}
+    Usuario.prototype.update = async function(id, name, email) {
+        var body = {
+            "name": name,
+            "email": email
+        };
+        var data = await put("update", id, body);
+        console.log(data);
+    }
 
-    Usuario.prototype.delete = function(id) {}
+    Usuario.prototype.delete = async function(id) {
+        var status = await del("delete", id);
+        console.log(status);
+    }
 
     //Metodos privados
 
     async function get(path, id) {
 
         //concatenação de strings
-        if (id == null) {
-            var _url = `${url}/${path}`;
-        } else {
-            var _url = `${url}/${path}?${id}`;
-        }
+        var _url = `${url}/${path}/${id}`;        
 
         //chamada do serviço
-        var response = await fetch(_url,{"mode": "no-cors"});
+        var response = await fetch(_url,{});
 
         //lendo a resposta do serviço como json
         var data = await response.json();
@@ -43,11 +56,47 @@
         return data;
     }
     
-    function post(path, body) {}
+    async function post(path, body) {
+        var _url = `${url}/${path}`;
 
-    function put(path, id, body) {}
+        var response = await fetch(_url, {
+            method: 'POST',
+            body: JSON.stringify(body),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
 
-    function del(path, id) {}
+        var data = await response.json();
+        return data;
+    }
+
+    async function put(path, id, body) {
+        var _url = `${url}/${path}/${id}`;
+
+        var _url = await fetch(_url, {
+            method: 'PUT',
+            body: JSON.stringify(body),
+            headers: {
+                'Content-type': "applicaton/json"
+            }
+        });
+
+        var data = await response.json();
+        return data;
+    
+    }
+
+    async function del(path, id) {
+        var _url = `${url}/${path}/${id}`;
+
+        var response = await fetch(_url, {
+            method: 'DELETE'           
+        });
+
+        var status = responde.status;
+        return status;
+    }
 
     
 }())

@@ -7,10 +7,12 @@
     <body>
         <h1>Usuários da Biblioteca</h1>
 
+
+
         <script>
             (async function() {
                 var usuario = new Usuario();
-                var usuarios = await usuario.buscarTodos();
+                var resp =  await usuario.buscaTodos();                
             })();
         </script>
     </body>
